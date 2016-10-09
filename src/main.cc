@@ -98,10 +98,13 @@ KeyCallback(GLFWwindow* window,
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-		// FIXME: WASD
+		g_camera.rotate(glm::vec3(0, 1, 0));
 	} else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
+        g_camera.rotate(glm::vec3(0, -1, 0));
 	} else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
+        g_camera.rotate(glm::vec3(-1, 0, 0));
 	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
+        g_camera.rotate(glm::vec3(1, 0, 0));
 	} else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
 		// FIXME: Left Right Up and Down
 	} else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {

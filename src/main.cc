@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
 
 	glm::vec4 min_bounds = glm::vec4(std::numeric_limits<float>::max());
 	glm::vec4 max_bounds = glm::vec4(-std::numeric_limits<float>::max());
-	for (int i = 0; i < obj_vertices.size(); ++i) {
+	for (unsigned i = 0; i < obj_vertices.size(); ++i) {
 		min_bounds = glm::min(obj_vertices[i], min_bounds);
 		max_bounds = glm::max(obj_vertices[i], max_bounds);
 	}

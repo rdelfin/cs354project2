@@ -101,9 +101,9 @@ KeyCallback(GLFWwindow* window,
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-		g_camera.rotateY(-1);
+		g_camera.rotateY(1);
 	} else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
-        g_camera.rotateY(1);
+        g_camera.rotateY(-1);
 	} else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
         g_camera.rotateX(-1);
 	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {

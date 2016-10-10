@@ -17,7 +17,7 @@ void Camera::rotateX(float dir) {
 
     glm::vec3 pointingDir = glm::normalize(look_ - eye_);
     glm::vec3 perpAxis = glm::normalize(glm::cross(up_, pointingDir));
-    glm::vec3 rotateAxis = glm::cross(pointingDir, perpAxis);
+    glm::vec3 rotateAxis = glm::normalize(glm::cross(pointingDir, perpAxis));
 
     glm::mat4 newRotation = glm::rotate(rotation_speed*dir, rotateAxis);
     eye_ = glm::vec3(newRotation * glm::vec4(eye_, 1));

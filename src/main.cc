@@ -95,37 +95,40 @@ KeyCallback(GLFWwindow* window,
             int action,
             int mods)
 {
-	// Note:
-	// This is only a list of functions to implement.
-	// you may want to re-organize this piece of code.
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-		g_camera.rotateY(1);
-	} else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
+    // Note:
+    // This is only a list of functions to implement.
+    // you may want to re-organize this piece of code.
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
+        g_camera.rotateY(1);
+    } else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
         g_camera.rotateY(-1);
-	} else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
+    } else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
         g_camera.rotateX(-1);
-	} else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
+    } else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
         g_camera.rotateX(1);
-	} else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
-		// FIXME: Left Right Up and Down
-	} else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
-	} else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
-	} else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
-	} else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
-		// FIXME: FPS mode on/off
-	}
-	if (!g_menger)
-		return ; // 0-4 only available in Menger mode.
-	if (key == GLFW_KEY_0 && action != GLFW_RELEASE) {
-		// FIXME: Change nesting level of g_menger
-		// Note: GLFW_KEY_0 - 4 may not be continuous.
-	} else if (key == GLFW_KEY_1 && action != GLFW_RELEASE) {
-	} else if (key == GLFW_KEY_2 && action != GLFW_RELEASE) {
-	} else if (key == GLFW_KEY_3 && action != GLFW_RELEASE) {
-	} else if (key == GLFW_KEY_4 && action != GLFW_RELEASE) {
-	}
+    } else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
+        g_camera.translate(glm::vec3(-1, 0, 0));
+    } else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
+        g_camera.translate(glm::vec3(1, 0, 0));
+    } else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
+        g_camera.translate(glm::vec3(0, -1, 0));
+    } else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
+        g_camera.translate(glm::vec3(0, 1, 0));
+    } else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
+        // FIXME: FPS mode on/off
+    }
+    if (!g_menger)
+        return ; // 0-4 only available in Menger mode.
+    if (key == GLFW_KEY_0 && action != GLFW_RELEASE) {
+        // FIXME: Change nesting level of g_menger
+        // Note: GLFW_KEY_0 - 4 may not be continuous.
+    } else if (key == GLFW_KEY_1 && action != GLFW_RELEASE) {
+    } else if (key == GLFW_KEY_2 && action != GLFW_RELEASE) {
+    } else if (key == GLFW_KEY_3 && action != GLFW_RELEASE) {
+    } else if (key == GLFW_KEY_4 && action != GLFW_RELEASE) {
+    }
 }
 
 int g_current_button;

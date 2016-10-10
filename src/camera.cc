@@ -29,16 +29,20 @@ void Camera::rotateY(float dir) {
     glm::vec3 rotateAxis = glm::normalize(glm::cross(up_, pointingDir));
 
     glm::mat4 newRotation = glm::rotate(rotation_speed*dir, rotateAxis);
-
     eye_ = glm::vec3(newRotation * glm::vec4(eye_, 1));
 }
 
 
+void Camera::translate(glm::vec3 dir) {
+    translateMat  = glm::translate(dir*pan_speed) * translateMat;
+}
 
 glm::mat4 Camera::get_view_matrix() const
 {
+    glm::vec3 newEye(translateMat * glm::vec4(eye_, 1));
+    glm::vec3 newLook(translateMat * glm::vec4(look_, 1));
 
-    glm::vec3 Z = glm::normalize(eye_ - look_);
+    glm::vec3 Z = glm::normalize(newEye - newLook);
     glm::vec3 X = glm::cross(up_, Z);
     glm::vec3 Y = glm::normalize(glm::cross(Z, X));
     X = glm::normalize(X);
@@ -48,7 +52,7 @@ glm::mat4 Camera::get_view_matrix() const
     eyeMat[0] = glm::vec4(X.x, Y.x, Z.x, 0);
     eyeMat[1] = glm::vec4(X.y, Y.y, Z.y, 0);
     eyeMat[2] = glm::vec4(X.z, Y.z, Z.z, 0);
-    eyeMat[3] = glm::vec4(glm::dot(-X, eye_), glm::dot(-Y, eye_), glm::dot(-Z, eye_), 1);
+    eyeMat[3] = glm::vec4(glm::dot(-X, newEye), glm::dot(-Y, newEye), glm::dot(-Z, newEye), 1);
 
     return eyeMat;
 }

@@ -81,7 +81,7 @@ Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
 
     // Left face
     obj_vertices.push_back(glm::vec4(-0.5f, -0.5f, 0.5f, 1.0f));
-    vtx_normals.push_back(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f));
+    vtx_normals.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
     obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, 0.5f, 1.0f));
     vtx_normals.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
     obj_vertices.push_back(glm::vec4(-0.5f, 0.5f, -0.5f, 1.0f));

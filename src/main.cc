@@ -37,6 +37,7 @@ uniform mat4 projection;
 uniform vec4 light_position;
 out vec4 light_direction;
 out vec4 normal;
+out vec4 world_normal;
 void main()
 {
 // Transform vertex into clipping coordinates
@@ -46,6 +47,7 @@ void main()
         light_direction = view * (light_position - vertex_position);
 //  Transform normal to camera coordinates
         normal = view * vertex_normal;
+        world_normal = vertex_normal;
 }
 )zzz";
 
@@ -53,13 +55,14 @@ const char* fragment_shader =
 R"zzz(#version 330 core
 in vec4 normal;
 in vec4 light_direction;
+in vec4 world_normal;
 out vec4 fragment_color;
 void main()
 {
-	vec4 color = vec4(1.0*normal.x, 1.0*normal.y, 1.0*normal.z, 1.0);
-	float dot_nl = dot(normalize(light_direction), normalize(normal));
-	dot_nl = clamp(dot_nl, 0.0, 1.0);
-	fragment_color = clamp(dot_nl * color, 0.0, 1.0);
+    vec4 color = vec4(1.0*world_normal.x, 1.0*world_normal.y, 1.0*world_normal.z, 1.0);
+    float dot_nl = dot(normalize(light_direction), normalize(normal));
+    dot_nl = clamp(dot_nl, 0.0, 1.0);
+    fragment_color = clamp(dot_nl * color, 0.0, 1.0);
 }
 )zzz";
 
@@ -72,7 +75,7 @@ in vec4 world_position;
 out vec4 fragment_color;
 void main()
 {
-	fragment_color = vec4(0.0, 1.0, 0.0, 1.0);
+    fragment_color = vec4(0.0, 1.0, 0.0, 1.0);
 }
 )zzz";
 

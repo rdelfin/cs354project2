@@ -7,13 +7,15 @@ class Camera {
 public:
 	glm::mat4 get_view_matrix() const;
 
-    void rotate(glm::vec3 dir);
+    void rotateX(float dir);
+    void rotateY(float dir);
 private:
 	float camera_distance_ = 3.0;
 	glm::vec3 look_ = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 up_ = glm::vec3(0.0f, 1.0, 0.0f);
 	glm::vec3 eye_ = glm::vec3(0.0f, 0.0f, camera_distance_);
-	// Note: you may need additional member variables
+
+    glm::mat4 rotationMat = glm::mat4(1.0f);
 };
 
 #endif

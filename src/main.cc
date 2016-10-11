@@ -88,6 +88,8 @@ ErrorCallback(int error, const char* description)
 std::shared_ptr<Menger> g_menger;
 Camera g_camera;
 
+bool prevPressed = false;
+
 void
 KeyCallback(GLFWwindow* window,
             int key,
@@ -131,20 +133,29 @@ KeyCallback(GLFWwindow* window,
 }
 
 int g_current_button;
+bool g_prev_mouse_pressed;
 bool g_mouse_pressed;
+glm::vec2 prevMouse(0.0f, 0.0f);
 
 void
 MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 {
-	if (!g_mouse_pressed)
-		return;
-	if (g_current_button == GLFW_MOUSE_BUTTON_LEFT) {
-		// FIXME: left drag
-	} else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT) {
-		// FIXME: middle drag
-	} else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
-		// FIXME: right drag
-	}
+    glm::vec2 mouse(mouse_x, mouse_y);
+
+	if (g_mouse_pressed && g_prev_mouse_pressed) {
+        if (g_current_button == GLFW_MOUSE_BUTTON_LEFT) {
+            glm::vec2 deltaMouse = mouse - prevMouse;
+            g_camera.pitch(50 * -deltaMouse.y / window_height);
+            g_camera.yaw(50 * -deltaMouse.x / window_height);
+        } else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT) {
+            // FIXME: middle drag
+        } else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
+            // FIXME: right drag
+        }
+    }
+
+    prevMouse = glm::vec2(mouse_x, mouse_y);
+    g_prev_mouse_pressed = g_mouse_pressed;
 }
 
 void

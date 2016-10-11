@@ -104,21 +104,21 @@ KeyCallback(GLFWwindow* window,
     } else if(key == GLFW_KEY_E && action != GLFW_RELEASE) {
         g_camera.zoom(-1);
     } else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-        g_camera.rotateY(1);
-    } else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
         g_camera.rotateY(-1);
+    } else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
+        g_camera.rotateY(1);
     } else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
         g_camera.rotateX(-1);
     } else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
         g_camera.rotateX(1);
     } else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec3(-1, 0, 0));
+        g_camera.translate(glm::vec2(-1, 0));
     } else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec3(1, 0, 0));
+        g_camera.translate(glm::vec2(1, 0));
     } else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec3(0, -1, 0));
+        g_camera.translate(glm::vec2(0, -1));
     } else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec3(0, 1, 0));
+        g_camera.translate(glm::vec2(0, 1));
     } else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
         // FIXME: FPS mode on/off
     }

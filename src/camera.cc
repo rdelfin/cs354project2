@@ -14,28 +14,28 @@ namespace {
 
 
 void Camera::rotateX(float dir) {
-    glm::vec3 newEye(translateMat * glm::vec4(eye_, 1));
+    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
 
-    glm::vec3 point = glm::normalize(look_ - eye_);
-    glm::vec3 right = glm::normalize(glm::cross(point, up_));
-    glm::vec3 up = glm::normalize(glm::cross(right, point));
+    look_ = glm::normalize(center_ - newEye);
+    right_ = glm::normalize(glm::cross(look_, up_));
+    up_ = glm::normalize(glm::cross(right_, look_));
 
-    rotateMat = glm::rotate(rotation_speed*dir, up) * rotateMat;
+    rotateMat = glm::rotate(rotation_speed*dir, up_) * rotateMat;
 }
 
 void Camera::rotateY(float dir) {
-    glm::vec3 newEye(translateMat * glm::vec4(eye_, 1));
+    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
 
-    glm::vec3 point = glm::normalize(look_ - eye_);
-    glm::vec3 right = glm::normalize(glm::cross(point, up_));
-    glm::vec3 up = glm::normalize(glm::cross(right, point));
+    look_ = glm::normalize(center_ - newEye);
+    right_ = glm::normalize(glm::cross(look_, up_));
+    up_ = glm::normalize(glm::cross(right_, look_));
 
-    rotateMat = glm::rotate(rotation_speed*dir, right) * rotateMat;
+    rotateMat = glm::rotate(rotation_speed*dir, right_) * rotateMat;
 }
 
 
-void Camera::translate(glm::vec3 dir) {
-    translateMat  = glm::translate(dir*pan_speed) * translateMat;
+void Camera::translate(glm::vec2 dir) {
+    translateMat  = glm::translate((dir.x*right_ + dir.y*up_)*pan_speed) * translateMat;
 }
 
 void Camera::zoom(float dir) {

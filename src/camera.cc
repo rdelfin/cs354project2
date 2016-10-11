@@ -14,23 +14,21 @@ namespace {
 
 
 void Camera::rotateX(float dir) {
-    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
+    rotateMat = glm::rotate(rotation_speed*dir, up_) * rotateMat;
 
+    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
     look_ = glm::normalize(center_ - newEye);
     right_ = glm::normalize(glm::cross(look_, up_));
     up_ = glm::normalize(glm::cross(right_, look_));
-
-    rotateMat = glm::rotate(rotation_speed*dir, up_) * rotateMat;
 }
 
 void Camera::rotateY(float dir) {
-    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
+    rotateMat = glm::rotate(rotation_speed*dir, right_) * rotateMat;
 
+    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
     look_ = glm::normalize(center_ - newEye);
     right_ = glm::normalize(glm::cross(look_, up_));
     up_ = glm::normalize(glm::cross(right_, look_));
-
-    rotateMat = glm::rotate(rotation_speed*dir, right_) * rotateMat;
 }
 
 

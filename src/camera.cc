@@ -37,14 +37,9 @@ void Camera::pitch(float dir) {
 
 
 void Camera::roll(float dir) {
-    // Rotate around right pointing vector (for pitch)
-    rotateMat = glm::rotate(roll_speed*dir, look_) * rotateMat;
-
-    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
-    // Generate new look, right and up vectors based on new rotation
-    look_ = glm::normalize(center_ - newEye);
-    right_ = glm::normalize(glm::cross(look_, up_));
-    up_ = glm::normalize(glm::cross(right_, look_));
+    glm::mat4 rollRotate = glm::rotate(dir*roll_speed, look_);
+    right_ = glm::normalize(glm::vec3(rollRotate * glm::vec4(right_, 0.0f)));
+    up_ = glm::normalize(glm::vec3(rollRotate * glm::vec4(up_, 0.0f)));
 }
 
 

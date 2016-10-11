@@ -10,6 +10,7 @@ public:
     void rotateX(float dir);
     void rotateY(float dir);
     void translate(glm::vec3 dir);
+	void zoom(float dir);
 private:
 	float camera_distance_ = 3.0;
 	glm::vec3 look_ = glm::vec3(0.0f, 0.0f, -1.0f);

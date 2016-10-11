@@ -93,14 +93,17 @@ KeyCallback(GLFWwindow* window,
             int key,
             int scancode,
             int action,
-            int mods)
-{
+            int mods) {
     // Note:
     // This is only a list of functions to implement.
     // you may want to re-organize this piece of code.
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
-    else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
+    } else if(key == GLFW_KEY_Q && action != GLFW_RELEASE) {
+        g_camera.zoom(1);
+    } else if(key == GLFW_KEY_E && action != GLFW_RELEASE) {
+        g_camera.zoom(-1);
+    } else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
         g_camera.rotateY(1);
     } else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
         g_camera.rotateY(-1);

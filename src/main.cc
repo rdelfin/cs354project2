@@ -88,7 +88,9 @@ ErrorCallback(int error, const char* description)
 std::shared_ptr<Menger> g_menger;
 Camera g_camera;
 
-bool prevPressed = false;
+bool g_ctrl_pressed;
+bool g_shift_pressed;
+bool g_alt_pressed;
 
 void
 KeyCallback(GLFWwindow* window,
@@ -130,6 +132,18 @@ KeyCallback(GLFWwindow* window,
     } else if (key == GLFW_KEY_3 && action != GLFW_RELEASE) {
     } else if (key == GLFW_KEY_4 && action != GLFW_RELEASE) {
     }
+
+
+    // Used for ALT, CTRL and SHIFT
+    if(action == GLFW_PRESS || action == GLFW_RELEASE) {
+        if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_RIGHT_CONTROL) {
+            g_ctrl_pressed = action == GLFW_PRESS;
+        } else if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT) {
+            g_shift_pressed = action == GLFW_PRESS;
+        } else if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT) {
+            g_alt_pressed = action == GLFW_PRESS;
+        }
+    }
 }
 
 int g_current_button;
@@ -141,16 +155,16 @@ void
 MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 {
     glm::vec2 mouse(mouse_x, mouse_y);
+    glm::vec2 deltaMouse = mouse - prevMouse;
 
 	if (g_mouse_pressed && g_prev_mouse_pressed) {
-        if (g_current_button == GLFW_MOUSE_BUTTON_LEFT) {
-            glm::vec2 deltaMouse = mouse - prevMouse;
-            g_camera.pitch(50 * -deltaMouse.y / window_height);
-            g_camera.yaw(50 * -deltaMouse.x / window_height);
-        } else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT) {
-            // FIXME: middle drag
-        } else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE) {
-            // FIXME: right drag
+        if (g_current_button == GLFW_MOUSE_BUTTON_LEFT && !g_alt_pressed && !g_shift_pressed && !g_ctrl_pressed) {
+            g_camera.pitch((180.0f / M_PI) * -deltaMouse.y / window_width);
+            g_camera.yaw((180.0f /  M_PI) * -deltaMouse.x / window_height);
+        } else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT || (g_current_button == GLFW_MOUSE_BUTTON_LEFT && (g_alt_pressed || g_shift_pressed))) {
+            g_camera.zoom(10.0f * deltaMouse.y / window_height);
+        } else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE || (g_current_button == GLFW_MOUSE_BUTTON_LEFT && g_ctrl_pressed)) {
+            g_camera.translate(25.0f*glm::vec2(-deltaMouse.x / window_width, deltaMouse.y / window_height));
         }
     }
 

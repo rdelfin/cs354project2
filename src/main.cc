@@ -99,18 +99,14 @@ KeyCallback(GLFWwindow* window,
     // you may want to re-organize this piece of code.
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
-    } else if(key == GLFW_KEY_Q && action != GLFW_RELEASE) {
-        g_camera.zoom(1);
-    } else if(key == GLFW_KEY_E && action != GLFW_RELEASE) {
-        g_camera.zoom(-1);
     } else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-        g_camera.rotateY(-1);
+        g_camera.zoom(1);
     } else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
-        g_camera.rotateY(1);
+        g_camera.zoom(-1);
     } else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
-        g_camera.rotateX(-1);
+        g_camera.roll(-1);
     } else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
-        g_camera.rotateX(1);
+        g_camera.roll(1);
     } else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
         g_camera.translate(glm::vec2(-1, 0));
     } else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {

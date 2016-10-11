@@ -13,19 +13,35 @@ namespace {
 
 
 
-void Camera::rotateX(float dir) {
+void Camera::yaw(float dir) {
+    // Rotate around up vector (for yaw)
     rotateMat = glm::rotate(rotation_speed*dir, up_) * rotateMat;
 
     glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
+    // Generate new look, right and up vectors based on new rotation
     look_ = glm::normalize(center_ - newEye);
     right_ = glm::normalize(glm::cross(look_, up_));
     up_ = glm::normalize(glm::cross(right_, look_));
 }
 
-void Camera::rotateY(float dir) {
+void Camera::pitch(float dir) {
+    // Rotate around right pointing vector (for pitch)
     rotateMat = glm::rotate(rotation_speed*dir, right_) * rotateMat;
 
     glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
+    // Generate new look, right and up vectors based on new rotation
+    look_ = glm::normalize(center_ - newEye);
+    right_ = glm::normalize(glm::cross(look_, up_));
+    up_ = glm::normalize(glm::cross(right_, look_));
+}
+
+
+void Camera::roll(float dir) {
+    // Rotate around right pointing vector (for pitch)
+    rotateMat = glm::rotate(roll_speed*dir, look_) * rotateMat;
+
+    glm::vec3 newEye(rotateMat * glm::vec4(eye_, 1));
+    // Generate new look, right and up vectors based on new rotation
     look_ = glm::normalize(center_ - newEye);
     right_ = glm::normalize(glm::cross(look_, up_));
     up_ = glm::normalize(glm::cross(right_, look_));
@@ -60,4 +76,3 @@ glm::mat4 Camera::get_view_matrix() const
 
     return eyeMat;
 }
-

@@ -7,8 +7,9 @@ class Camera {
 public:
 	glm::mat4 get_view_matrix() const;
 
-    void rotateX(float dir);
-    void rotateY(float dir);
+    void yaw(float dir);
+    void pitch(float dir);
+    void roll(float dir);
     void translate(glm::vec2 dir);
 	void zoom(float dir);
 private:

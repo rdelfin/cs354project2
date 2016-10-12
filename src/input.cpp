@@ -3,10 +3,11 @@
 //
 
 #include "input.hpp"
+#include <boost/bind.hpp>
 
 MouseState::MouseState(GLFWwindow* window) {
-    glfwSetCursorPosCallback(window, MousePosCallback);
-    glfwSetMouseButtonCallback(window, MouseButtonCallback);
+    glfwSetCursorPosCallback(window, boost::bind(&MouseState::MousePosCallback, this));
+    glfwSetMouseButtonCallback(window, boost::bind(&MouseState::MouseButtonCallback, this));
 }
 
 bool MouseState::pressed(unsigned button) {
@@ -77,8 +78,10 @@ void MouseState::MouseButtonCallback(GLFWwindow *window, int button, int action,
 }
 
 
+
+
 KeyState::KeyState(GLFWwindow* window) {
-    glfwSetKeyCallback(window, KeyCallback);
+    glfwSetKeyCallback(window, std::bind(&KeyState::KeyCallback, this));
 }
 
 bool KeyState::pressed(unsigned button) {

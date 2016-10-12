@@ -4,8 +4,9 @@
 
 #include "input.hpp"
 
-MouseState::MouseState(GLFWwindow*) {
-
+MouseState::MouseState(GLFWwindow* window) {
+    glfwSetCursorPosCallback(window, MousePosCallback);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
 }
 
 bool MouseState::pressed(unsigned button) {
@@ -62,9 +63,22 @@ void MouseState::update() {
     currMutex.unlock();
 }
 
+void MouseState::MousePosCallback(GLFWwindow *window, double mouseX, double mouseY) {
+    posMutex.lock();
+    pos = glm::vec2(mouseX, mouseY);
+    posMutex.unlock();
+}
+
+void MouseState::MouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
+    currMutex.lock();
+    if(action == GLFW_PRESS || action == GLFW_RELEASE)
+        curr[button] = action == GLFW_PRESS;
+    currMutex.unlock();
+}
+
 
 KeyState::KeyState(GLFWwindow* window) {
-
+    glfwSetKeyCallback(window, KeyCallback);
 }
 
 bool KeyState::pressed(unsigned button) {
@@ -95,10 +109,18 @@ bool KeyState::justReleased(unsigned button) {
     return result;
 }
 
+void KeyState::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    currMutex.lock();
+    if(action == GLFW_PRESS || action == GLFW_RELEASE)
+        curr[key] = action == GLFW_PRESS;
+    currMutex.unlock();
+}
 
 void KeyState::update() {
+    currMutex.lock();
     for(unsigned i = 0; i < N_KEY_BUTTONS; i++)
         prev[i] = curr[i];
+    currMutex.unlock();
 }
 
 KeyState::~KeyState() {

@@ -34,6 +34,9 @@ private:
 
     std::mutex currMutex;
     std::mutex posMutex;
+
+    void MousePosCallback(GLFWwindow* window, double mouseX, double mouseY);
+    void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 };
 
 class KeyState {
@@ -51,6 +54,8 @@ public:
 private:
     bool curr[N_KEY_BUTTONS];
     bool prev[N_KEY_BUTTONS];
+
+    void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
     std::mutex currMutex;
 

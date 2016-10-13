@@ -6,7 +6,7 @@
 
 class Menger {
 public:
-	Menger();
+	Menger(glm::vec3 min, glm::vec3 max);
 	~Menger();
 	void set_nesting_level(int);
 	bool is_dirty() const;
@@ -17,6 +17,13 @@ public:
 private:
 	int nesting_level_ = 0;
 	bool dirty_ = false;
+
+    void generate_cube(std::vector<glm::vec4>& obj_vertices,
+                       std::vector<glm::vec4>& vtx_normals,
+                       std::vector<glm::uvec3>& obj_faces,
+                       glm::vec3 min, glm::vec3 max) const;
+
+    glm::vec3 min, max;
 };
 
 #endif

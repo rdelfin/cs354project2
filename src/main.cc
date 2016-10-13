@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 {
 	std::string window_title = "Menger";
 	if (!glfwInit()) exit(EXIT_FAILURE);
-	g_menger = std::make_shared<Menger>();
+	g_menger = std::make_shared<Menger>(glm::vec3(-0.5, -0.5, -0.5), glm::vec3(0.5, 0.5, 0.5));
 	glfwSetErrorCallback(ErrorCallback);
 
 	// Ask an OpenGL 3.3 core profile context 
@@ -354,6 +354,9 @@ int main(int argc, char* argv[])
 		CHECK_GL_ERROR(glBindVertexArray(g_array_objects[kGeometryVao]));
 
 		if (g_menger && g_menger->is_dirty()) {
+            obj_vertices.clear();
+            vtx_normals.clear();
+            obj_faces.clear();
 		    g_menger->generate_geometry(obj_vertices, vtx_normals, obj_faces);
 			g_menger->set_clean();
 		}

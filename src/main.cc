@@ -358,6 +358,7 @@ int main(int argc, char* argv[])
             vtx_normals.clear();
             obj_faces.clear();
 		    g_menger->generate_geometry(obj_vertices, vtx_normals, obj_faces);
+            std::cout << "Number of vertices: " << obj_vertices.size() << std::endl;
 			g_menger->set_clean();
 		}
 

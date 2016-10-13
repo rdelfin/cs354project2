@@ -18,17 +18,20 @@ private:
 	int nesting_level_ = 0;
 	bool dirty_ = false;
 
-    void generate_cube(std::vector<glm::vec4>& obj_vertices,
-                       std::vector<glm::vec4>& vtx_normals,
-                       std::vector<glm::uvec3>& obj_faces,
-                       glm::vec3 min, glm::vec3 max) const;
+    void generate_cube(std::vector<glm::vec4>* obj_vertices,
+                       std::vector<glm::vec4>* vtx_normals,
+                       std::vector<glm::uvec3>* obj_faces) const;
 
-    void add_face(std::vector<glm::vec4>& obj_vertices,
-                  std::vector<glm::vec4>& vtx_normals,
-                  std::vector<glm::uvec3>& obj_faces,
+    void add_face(std::vector<glm::vec4>* obj_vertices,
+                  std::vector<glm::vec4>* vtx_normals,
+                  std::vector<glm::uvec3>* obj_faces,
                   glm::vec4 v1, glm::vec4 v2, glm::vec4 v3, glm::vec4 v4, glm::vec4 normal) const;
 
     glm::vec3 min, max;
 };
+
+
+
+
 
 #endif

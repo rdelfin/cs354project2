@@ -41,6 +41,7 @@ Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
 			  std::vector<glm::vec4>& vtx_normals,
                           std::vector<glm::uvec3>& obj_faces) const
 {
+    std::cout << "nesting: " << nesting_level_ << std::endl;
     if(this->nesting_level_ == 0) {
         generate_cube(obj_vertices, vtx_normals, obj_faces, min, max);
         return;
@@ -55,33 +56,35 @@ Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
     glm::vec3 thirdy = glm::vec3(0, third.y, 0);
     glm::vec3 thirdz = glm::vec3(0, 0, third.z);
 
-    std::cout << "Third: (" << third.x << ", " << third.y << ", " << third.z << ")" << std::endl;
-    std::cout << "ThirdX: (" << thirdx.x << ", " << thirdx.y << ", " << thirdx.z << ")" << std::endl;
-    std::cout << "ThirdY: (" << thirdy.x << ", " << thirdy.y << ", " << thirdy.z << ")" << std::endl;
-    std::cout << "ThirdZ: (" << thirdz.x << ", " << thirdz.y << ", " << thirdz.z << ")" << std::endl;
+    //std::cout << "Third: (" << third.x << ", " << third.y << ", " << third.z << ")" << std::endl;
+    //std::cout << "ThirdX: (" << thirdx.x << ", " << thirdx.y << ", " << thirdx.z << ")" << std::endl;
+    //std::cout << "ThirdY: (" << thirdy.x << ", " << thirdy.y << ", " << thirdy.z << ")" << std::endl;
+    //std::cout << "ThirdZ: (" << thirdz.x << ", " << thirdz.y << ", " << thirdz.z << ")" << std::endl;
 
     subcubes.push_back(Menger(min, min + third));                                                                                     // Bottom left front
     subcubes.push_back(Menger(min + thirdx, min + thirdx + third));                                                                   // Bottom center front
-    subcubes.push_back(Menger(min + 2.0f*thirdx, min + 2.0f*thirdx + third));                                                         // Bottom right front
-    subcubes.push_back(Menger(min + thirdz, min + thirdz + third));                                                                   // Bottom left middle
-    subcubes.push_back(Menger(min + 2.0f*thirdz, min + 2.0f*thirdz + third));                                                         // Bottom left back
-    subcubes.push_back(Menger(min + 2.0f*thirdz + thirdx, min + 2.0f*thirdz + thirdx + third));                                       // Bottom center back
-    subcubes.push_back(Menger(min + 2.0f*thirdz + 2.0f*thirdx, min + 2.0f*thirdz + 2.0f*thirdx + third));                             // Bottom right back
-    subcubes.push_back(Menger(min + thirdz + 2.0f*thirdx, min + thirdz + 2.0f*thirdx + third));                                       // Bottom right center
+    //subcubes.push_back(Menger(min + 2.0f*thirdx, min + 2.0f*thirdx + third));                                                         // Bottom right front
+    //subcubes.push_back(Menger(min + thirdz, min + thirdz + third));                                                                   // Bottom left middle
+    //subcubes.push_back(Menger(min + 2.0f*thirdz, min + 2.0f*thirdz + third));                                                         // Bottom left back
+    //subcubes.push_back(Menger(min + 2.0f*thirdz + thirdx, min + 2.0f*thirdz + thirdx + third));                                       // Bottom center back
+    //subcubes.push_back(Menger(min + 2.0f*thirdz + 2.0f*thirdx, min + 2.0f*thirdz + 2.0f*thirdx + third));                             // Bottom right back
+    //subcubes.push_back(Menger(min + thirdz + 2.0f*thirdx, min + thirdz + 2.0f*thirdx + third));                                       // Bottom right center
 
-    subcubes.push_back(Menger(min + thirdy, min + thirdy + third));                                                                   // Center left front
-    subcubes.push_back(Menger(min + thirdy + 2.0f*thirdz, min + thirdy + 2.0f*thirdz + third));                                       // Center left back
-    subcubes.push_back(Menger(min + thirdy + 2.0f*thirdz + 2.0f*thirdx, min + thirdy + 2.0f*thirdz + 2.0f*thirdx + third));           // Center right back
-    subcubes.push_back(Menger(min + thirdy + 2.0f*thirdx, min + thirdy + 2.0f*thirdx + third));                                       // Center right front
+    //subcubes.push_back(Menger(min + thirdy, min + thirdy + third));                                                                   // Center left front
+    //subcubes.push_back(Menger(min + thirdy + 2.0f*thirdz, min + thirdy + 2.0f*thirdz + third));                                       // Center left back
+    //subcubes.push_back(Menger(min + thirdy + 2.0f*thirdz + 2.0f*thirdx, min + thirdy + 2.0f*thirdz + 2.0f*thirdx + third));           // Center right back
+    //subcubes.push_back(Menger(min + thirdy + 2.0f*thirdx, min + thirdy + 2.0f*thirdx + third));                                       // Center right front
 
-    subcubes.push_back(Menger(min + 2.0f*thirdy, min + 2.0f*thirdy + third));                                                         // Top left front
-    subcubes.push_back(Menger(min + 2.0f*thirdy + thirdx, min + 2.0f*thirdy + thirdx + third));                                       // Top center front
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdx, min + 2.0f*thirdy + 2.0f*thirdx + third));                             // Top right front
-    subcubes.push_back(Menger(min + 2.0f*thirdy + thirdz, min + 2.0f*thirdy + thirdz + third));                                       // Top left middle
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz, min + 2.0f*thirdy + 2.0f*thirdz + third));                             // Top left back
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz + thirdx, min + 2.0f*thirdy + 2.0f*thirdz + thirdx + third));           // Top center back
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx, min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx + third)); // Top right back
-    subcubes.push_back(Menger(min + 2.0f*thirdy + thirdz + 2.0f*thirdx, min + 2.0f*thirdy + thirdz + 2.0f*thirdx + third));           // Bottom right center
+    //subcubes.push_back(Menger(min + 2.0f*thirdy, min + 2.0f*thirdy + third));                                                         // Top left front
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + thirdx, min + 2.0f*thirdy + thirdx + third));                                       // Top center front
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdx, min + 2.0f*thirdy + 2.0f*thirdx + third));                             // Top right front
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + thirdz, min + 2.0f*thirdy + thirdz + third));                                       // Top left middle
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz, min + 2.0f*thirdy + 2.0f*thirdz + third));                             // Top left back
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz + thirdx, min + 2.0f*thirdy + 2.0f*thirdz + thirdx + third));           // Top center back
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx, min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx + third)); // Top right back
+    //subcubes.push_back(Menger(min + 2.0f*thirdy + thirdz + 2.0f*thirdx, min + 2.0f*thirdy + thirdz + 2.0f*thirdx + third));           // Bottom right center
+
+    //for()
 
     glm::vec3 lastMin(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx);
     glm::vec3 lastMax(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx + third);
@@ -117,9 +120,13 @@ void Menger::generate_cube(std::vector<glm::vec4> &obj_vertices, std::vector<glm
 
 
     //add_face(obj_vertices, vtx_normals, obj_faces, v1, v4, v3, v2, n3);   // Back face
-    std::cout << "Drawing front face: (" << v8.x << ", " << v8.y << ", " << v8.z << ") " << ", (" << v7.x << ", " << v7.y << ", " << v7.z << ") " << ", (" << v6.x << ", " << v6.y << ", " << v6.z << ") " << ", (" << v5.x << ", " << v5.y << ", " << v5.z << ") " << std::endl;
     add_face(obj_vertices, vtx_normals, obj_faces, v8, v7, v6, v5, n3);   // Front face
     //add_face(obj_vertices, vtx_normals, obj_faces, v7, v2, v3, v6, n2);   // Right face
+
+    std::cout << "Cube Stats" << std::endl;
+    std::cout << "X Stats: " << min.x << " to " << max.x << std::endl;
+    std::cout << "Y Stats: " << min.y << " to " << max.y << std::endl;
+    std::cout << "Z Stats: " << min.z << " to " << max.z << std::endl;
 }
 
 void Menger::add_face(std::vector<glm::vec4> &obj_vertices, std::vector<glm::vec4> &vtx_normals,
@@ -127,17 +134,19 @@ void Menger::add_face(std::vector<glm::vec4> &obj_vertices, std::vector<glm::vec
                       glm::vec4 normal) const {
     unsigned long idx = obj_vertices.size();
     obj_vertices.push_back(v1);
+    vtx_normals.push_back(normal);
     obj_vertices.push_back(v2);
+    vtx_normals.push_back(normal);
     obj_vertices.push_back(v3);
+    vtx_normals.push_back(normal);
     obj_vertices.push_back(v4);
     vtx_normals.push_back(normal);
-    vtx_normals.push_back(normal);
-    vtx_normals.push_back(normal);
-    vtx_normals.push_back(normal);
+
     obj_faces.push_back(glm::uvec3(idx, idx + 1, idx + 2));
     obj_faces.push_back(glm::uvec3(idx, idx + 2, idx + 3));
 
-    std::cout << "Added: (" << idx << ", " << idx + 1 << ", " << idx + 2 << ") and (" << idx << ", " << idx + 2 << ", " << idx + 3 << ")" << std::endl;2
+    //std::cout << "Drawing front face: (" << v1.x << ", " << v1.y << ", " << v1.z << "), (" << v2.x << ", " << v2.y << ", " << v2.z << "), (" << v3.x << ", " << v3.y << ", " << v3.z << "), (" << v4.x << ", " << v4.y << ", " << v4.z << ") " << std::endl;
+    //std::cout << "Added: (" << idx << ", " << idx + 1 << ", " << idx + 2 << ") and (" << idx << ", " << idx + 2 << ", " << idx + 3 << ")" << std::endl;
 }
 
 

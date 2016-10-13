@@ -371,6 +371,19 @@ int main(int argc, char* argv[])
 		// FIXME: change eye and center through mouse/keyboard events.
 		glm::mat4 view_matrix = g_camera.get_view_matrix();
 
+
+
+		std::cout << "Vertices:" << std::endl;
+		for(int i = 0; i < obj_vertices.size(); i++)
+			std::cout << "\t[" << i << "] = (" << obj_vertices[i].x << ", " << obj_vertices[i].y << ", " << obj_vertices[i].z << ")" << std::endl;
+		std::cout << "Normals:" << std::endl;
+		for(int i = 0; i < vtx_normals.size(); i++)
+			std::cout << "\t[" << i << "] = (" << vtx_normals[i].x << ", " << vtx_normals[i].y << ", " << vtx_normals[i].z << ")" << std::endl;
+		std::cout << "Faces:" << std::endl;
+		for(int i = 0; i < obj_faces.size(); i++)
+			std::cout << "\t[" << i << "] = (" << obj_faces[i].x << ", " << obj_faces[i].y << ", " << obj_faces[i].z << ")" << std::endl;
+		std::cout << std::endl;
+
 		// Send vertices to the GPU.
 		CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER,
 		                            g_buffer_objects[kGeometryVao][kVertexBuffer]));

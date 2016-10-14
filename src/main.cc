@@ -536,10 +536,11 @@ int main(int argc, char* argv[])
 void generate_floor(std::vector<glm::vec4> &vertices, std::vector<glm::vec4> &normals, std::vector<glm::uvec3> &faces) {
     unsigned long idx = vertices.size();
 
-    vertices.push_back(glm::vec4(100,  -1, 100,  1));
-    vertices.push_back(glm::vec4(100,  -1, -100, 1));
-    vertices.push_back(glm::vec4(-100, -1, -100, 1));
-    vertices.push_back(glm::vec4(-100, -1, 100,  1));
+	// CLOSE ENOUGH TO INFINITE
+    vertices.push_back(glm::vec4(100,  -2, 100,  1));
+    vertices.push_back(glm::vec4(100,  -2, -100, 1));
+    vertices.push_back(glm::vec4(-100, -2, -100, 1));
+    vertices.push_back(glm::vec4(-100, -2, 100,  1));
 
     normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));

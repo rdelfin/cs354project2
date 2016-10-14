@@ -38,10 +38,12 @@ uniform vec4 light_position;
 out vec4 light_direction;
 out vec4 normal;
 out vec4 world_normal;
+out vec4 world_position;
 void main()
 {
 // Transform vertex into clipping coordinates
-	gl_Position = projection * view * vertex_position;
+	world_position =  vertex_position;
+    gl_Position = projection * view * world_position;
 // Lighting in camera coordinates
 //  Compute light direction and transform to camera coordinates
         light_direction = view * (light_position - vertex_position);
@@ -73,9 +75,28 @@ in vec4 normal;
 in vec4 light_direction;
 in vec4 world_position;
 out vec4 fragment_color;
+
 void main()
 {
-    fragment_color = vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 modded_coord = mod(world_position, vec4(0.5));
+    if(modded_coord.x > 0.25) {
+        if(modded_coord.z > 0.25) {
+            color = vec4(1.0, 1.0, 1.0, 1.0);
+        } else {
+            color = vec4(0.0, 0.0, 0.0, 1.0);
+        }
+    } else {
+        if(modded_coord.z > 0.25) {
+            color = vec4(0.0, 0.0, 0.0, 1.0);
+        } else {
+            color = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+    }
+
+    float dot_nl = dot(normalize(light_direction), normalize(normal));
+    dot_nl = clamp(dot_nl, 0.0, 1.0);
+    fragment_color = clamp(dot_nl * color, 0.0, 1.0);
 }
 )zzz";
 
@@ -419,7 +440,7 @@ int main(int argc, char* argv[])
 
 
 
-	glm::vec4 light_position = glm::vec4(10.0f, 10.0f, 10.0f, 1.0f);
+	glm::vec4 light_position = glm::vec4(2.0f, 2.0f, 2.0f, 1.0f);
 	float aspect = 0.0f;
 	float theta = 0.0f;
 	while (!glfwWindowShouldClose(window)) {
@@ -477,9 +498,6 @@ int main(int argc, char* argv[])
 		CHECK_GL_ERROR(glDrawElements(GL_TRIANGLES, obj_faces.size() * 3, GL_UNSIGNED_INT, 0));
 
 
-        std::vector<glm::vec3> axisPoints = {glm::vec3(-10, 0, 0), glm::vec3(10, 0, 0), glm::vec3(0, -10, 0), glm::vec3(0, 10, 0), glm::vec3(0, 0, 10), glm::vec3(0, 0, -10)};
-
-
         CHECK_GL_ERROR(glBindVertexArray(g_array_objects[kFloorVao]));
 
         // Send vertices to the GPU.
@@ -518,10 +536,10 @@ int main(int argc, char* argv[])
 void generate_floor(std::vector<glm::vec4> &vertices, std::vector<glm::vec4> &normals, std::vector<glm::uvec3> &faces) {
     unsigned long idx = vertices.size();
 
-    vertices.push_back(glm::vec4(1,  -1, 1,  1));
-    vertices.push_back(glm::vec4(1,  -1, -1, 1));
-    vertices.push_back(glm::vec4(-1, -1, -1, 1));
-    vertices.push_back(glm::vec4(-1, -1, 1,  1));
+    vertices.push_back(glm::vec4(100,  -1, 100,  1));
+    vertices.push_back(glm::vec4(100,  -1, -100, 1));
+    vertices.push_back(glm::vec4(-100, -1, -100, 1));
+    vertices.push_back(glm::vec4(-100, -1, 100,  1));
 
     normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
     normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));

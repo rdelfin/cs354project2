@@ -46,60 +46,59 @@ Menger::generate_geometry(std::vector<glm::vec4>& obj_vertices,
         return;
     }
 
-    std::vector<Menger> subcubes;
-
-    glm::vec3 third = (max - min) / 3.0f;
-
-
-    glm::vec3 thirdx = glm::vec3(third.x, 0, 0);
-    glm::vec3 thirdy = glm::vec3(0, third.y, 0);
-    glm::vec3 thirdz = glm::vec3(0, 0, third.z);
-
     //std::cout << "Third: (" << third.x << ", " << third.y << ", " << third.z << ")" << std::endl;
     //std::cout << "ThirdX: (" << thirdx.x << ", " << thirdx.y << ", " << thirdx.z << ")" << std::endl;
     //std::cout << "ThirdY: (" << thirdy.x << ", " << thirdy.y << ", " << thirdy.z << ")" << std::endl;
     //std::cout << "ThirdZ: (" << thirdz.x << ", " << thirdz.y << ", " << thirdz.z << ")" << std::endl;
 
-    subcubes.push_back(Menger(min, min + third));                                                                                     // Bottom left front
-    subcubes.push_back(Menger(min + thirdx, min + thirdx + third));                                                                   // Bottom center front
-    subcubes.push_back(Menger(min + 2.0f*thirdx, min + 2.0f*thirdx + third));                                                         // Bottom right front
-    subcubes.push_back(Menger(min + thirdz, min + thirdz + third));                                                                   // Bottom left middle
-    subcubes.push_back(Menger(min + 2.0f*thirdz, min + 2.0f*thirdz + third));                                                         // Bottom left back
-    subcubes.push_back(Menger(min + 2.0f*thirdz + thirdx, min + 2.0f*thirdz + thirdx + third));                                       // Bottom center back
-    subcubes.push_back(Menger(min + 2.0f*thirdz + 2.0f*thirdx, min + 2.0f*thirdz + 2.0f*thirdx + third));                             // Bottom right back
+    std::vector<glm::vec3> mins;
+    mins.push_back(this->min);
 
-    subcubes.push_back(Menger(min + thirdy, min + thirdy + third));                                                                   // Center left front
-    subcubes.push_back(Menger(min + thirdy + 2.0f*thirdz, min + thirdy + 2.0f*thirdz + third));                                       // Center left back
-    subcubes.push_back(Menger(min + thirdy + 2.0f*thirdz + 2.0f*thirdx, min + thirdy + 2.0f*thirdz + 2.0f*thirdx + third));           // Center right back
-    subcubes.push_back(Menger(min + thirdy + 2.0f*thirdx, min + thirdy + 2.0f*thirdx + third));                                       // Center right front
+    for(int l = 1; l <= nesting_level_; l++) {
+        glm::vec3 third = (max - min) * float(1.0f / pow(3.0f, l));
+        glm::vec3 thirdx = glm::vec3(third.x, 0, 0);
+        glm::vec3 thirdy = glm::vec3(0, third.y, 0);
+        glm::vec3 thirdz = glm::vec3(0, 0, third.z);
 
-    subcubes.push_back(Menger(min + 2.0f*thirdy, min + 2.0f*thirdy + third));                                                         // Top left front
-    subcubes.push_back(Menger(min + 2.0f*thirdy + thirdx, min + 2.0f*thirdy + thirdx + third));                                       // Top center front
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdx, min + 2.0f*thirdy + 2.0f*thirdx + third));                             // Top right front
-    subcubes.push_back(Menger(min + 2.0f*thirdy + thirdz, min + 2.0f*thirdy + thirdz + third));                                       // Top left middle
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz, min + 2.0f*thirdy + 2.0f*thirdz + third));                             // Top left back
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz + thirdx, min + 2.0f*thirdy + 2.0f*thirdz + thirdx + third));           // Top center back
-    subcubes.push_back(Menger(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx, min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx + third)); // Top right back
+        std::vector<glm::vec3> subcubeMins;
+        subcubeMins = mins;
+        mins.clear();
 
-    glm::vec3 lastMin(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx);
-    glm::vec3 lastMax(min + 2.0f*thirdy + 2.0f*thirdz + 2.0f*thirdx + third);
+        for(glm::vec3 minvec : subcubeMins) {
+            mins.push_back(minvec);                                                 // Bottom left front
+            mins.push_back(minvec + thirdx);                                        // Bottom center front
+            mins.push_back(minvec + 2.0f * thirdx);                                 // Bottom right front
+            mins.push_back(minvec + thirdz);                                        // Bottom left middle
+            mins.push_back(minvec + thirdz + 2.0f * thirdx);                        // Bottom right middle
+            mins.push_back(minvec + 2.0f * thirdz);                                 // Bottom left back
+            mins.push_back(minvec + 2.0f * thirdz + thirdx);                        // Bottom center back
+            mins.push_back(minvec + 2.0f * thirdz + 2.0f * thirdx);                 // Bottom right back
 
-    for(auto it = subcubes.begin(); it != subcubes.end(); ++it) {
-        it->set_nesting_level(nesting_level_ - 1);
-        it->generate_geometry(obj_vertices, vtx_normals, obj_faces);
+            mins.push_back(minvec + thirdy);                                        // Center left front
+            mins.push_back(minvec + thirdy + 2.0f * thirdz);                        // Center left back
+            mins.push_back(minvec + thirdy + 2.0f * thirdz + 2.0f * thirdx);        // Center right back
+            mins.push_back(minvec + thirdy + 2.0f * thirdx);                        // Center right front
+
+            mins.push_back(minvec + 2.0f * thirdy);                                 // Top left front
+            mins.push_back(minvec + 2.0f * thirdy + thirdx);                        // Top center front
+            mins.push_back(minvec + 2.0f * thirdy + 2.0f * thirdx);                 // Top right front
+            mins.push_back(minvec + 2.0f * thirdy + thirdz);                        // Top left middle
+            mins.push_back(minvec + 2.0f * thirdy + thirdz + 2.0f * thirdx);        // Top right middle
+            mins.push_back(minvec + 2.0f * thirdy + 2.0f * thirdz);                 // Top left back
+            mins.push_back(minvec + 2.0f * thirdy + 2.0f * thirdz + thirdx);        // Top center back
+            mins.push_back(minvec + 2.0f * thirdy + 2.0f * thirdz + 2.0f * thirdx); // Top right back
+        }
     }
 
-    /*std::cout << "Last cube with: " << std::endl
-              << "\tMin: (" << lastMin.x << ", " << lastMin.y << ", " << lastMin.z << ")" << std::endl
-              << "\tMax: (" << lastMax.x << ", " << lastMax.y << ", " << lastMax.z << ")" << std::endl;*/
+    glm::vec3 cubeDiag = (max - min) * float(1.0 / pow(3.0f, nesting_level_));
+    for(auto it = mins.begin(); it != mins.end(); ++it)
+        generate_cube(obj_vertices, vtx_normals, obj_faces, *it, *it + cubeDiag);
 
+    std::cout << "Created " << mins.size() << " cubes" << std::endl;
 }
 
 void Menger::generate_cube(std::vector<glm::vec4> &obj_vertices, std::vector<glm::vec4> &vtx_normals,
                            std::vector<glm::uvec3> &obj_faces, glm::vec3 min, glm::vec3 max) const {
-    /*std::cout << "Creating cube: " << std::endl
-              << "\tMin: (" << min.x << ", " << min.y << ", " << min.z << ")" << std::endl
-              << "\tMax: (" << max.x << ", " << max.y << ", " << max.z << ")" << std::endl;*/
 
     unsigned long idx = obj_vertices.size();
     // Front face
@@ -133,7 +132,7 @@ void Menger::generate_cube(std::vector<glm::vec4> &obj_vertices, std::vector<glm
     vtx_normals.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
     obj_vertices.push_back(glm::vec4(max.x, max.y, max.z, 1.0f));
     vtx_normals.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
-    obj_vertices.push_back(glm::vec4(max.x, 0.5f, -0.5f, 1.0f));
+    obj_vertices.push_back(glm::vec4(max.x, max.y, min.z, 1.0f));
     vtx_normals.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));
     obj_vertices.push_back(glm::vec4(max.x, min.y, min.z, 1.0f));
     vtx_normals.push_back(glm::vec4(1.0f, 0.0f, 0.0f, 0.0f));

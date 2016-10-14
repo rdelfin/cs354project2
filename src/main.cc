@@ -75,7 +75,7 @@ in vec4 world_position;
 out vec4 fragment_color;
 void main()
 {
-    fragment_color = vec4(0.0, 1.0, 0.0, 1.0);
+    fragment_color = vec4(1.0, 1.0, 1.0, 1.0);
 }
 )zzz";
 
@@ -154,6 +154,8 @@ bool g_prev_mouse_pressed;
 bool g_mouse_pressed;
 glm::vec2 prevMouse(0.0f, 0.0f);
 
+void generate_floor(std::vector<glm::vec4> &vertices, std::vector<glm::vec4> &normals, std::vector<glm::uvec3> &faces);
+
 void
 MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
 {
@@ -215,9 +217,8 @@ int main(int argc, char* argv[])
 	std::vector<glm::vec4> obj_vertices;
 	std::vector<glm::vec4> vtx_normals;
 	std::vector<glm::uvec3> obj_faces;
-        
-        //FIXME: Create the geometry from a Menger object (in menger.cc).
-	g_menger->set_nesting_level(1);
+
+	g_menger->set_nesting_level(4);
 	g_menger->generate_geometry(obj_vertices, vtx_normals, obj_faces);
 	g_menger->set_clean();
 
@@ -229,6 +230,10 @@ int main(int argc, char* argv[])
 	}
 	std::cout << "min_bounds = " << glm::to_string(min_bounds) << "\n";
 	std::cout << "max_bounds = " << glm::to_string(max_bounds) << "\n";
+
+    /*===================================================================================
+ 	 *======================= GLM LOADING VBO AND VAO FOR MENGER ========================
+	 *===================================================================================*/
 
 	// Setup our VAO array.
 	CHECK_GL_ERROR(glGenVertexArrays(kNumVaos, &g_array_objects[0]));
@@ -262,13 +267,49 @@ int main(int argc, char* argv[])
 				sizeof(uint32_t) * obj_faces.size() * 3,
 				&obj_faces[0], GL_STATIC_DRAW));
 
-	/*
- 	 * So far the geometry is loaded into g_buffer_objects[kGeometryVao][*].
-	 * These buffers are bound to g_array_objects[kGeometryVao]
-	 */
 
-	// FIXME: load the floor into g_buffer_objects[kFloorVao][*],
-	//        and bind the VBO to g_array_objects[kFloorVao]
+
+    /*===================================================================================
+     *======================= GLM LOADING VBO AND VAO FOR FLOOR =========================
+     *===================================================================================*/
+
+    std::vector<glm::vec4> floor_vertices;
+    std::vector<glm::vec4> floor_normals;
+    std::vector<glm::uvec3> floor_faces;
+
+    generate_floor(floor_vertices, floor_normals, floor_faces);
+
+    // Setup our VAO array.
+	CHECK_GL_ERROR(glBindVertexArray(g_array_objects[kFloorVao]));
+
+    // Generate buffer objects
+	CHECK_GL_ERROR(glGenBuffers(kNumVbos, &g_buffer_objects[kFloorVao][0]));
+
+    // Setup vertex data in a VBO.
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kFloorVao][kVertexBuffer]));
+    // NOTE: We do not send anything right now, we just describe it to OpenGL.
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+                                sizeof(float) * floor_vertices.size() * 4, nullptr,
+                                GL_STATIC_DRAW));
+    CHECK_GL_ERROR(glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0));
+    CHECK_GL_ERROR(glEnableVertexAttribArray(0));
+
+    CHECK_GL_ERROR(glBindBuffer(GL_ARRAY_BUFFER, g_buffer_objects[kFloorVao][kNormalBuffer]));
+    // NOTE: We do not send anything right now, we just describe it to OpenGL.
+    CHECK_GL_ERROR(glBufferData(GL_ARRAY_BUFFER,
+                                sizeof(float) * floor_normals.size() * 4, nullptr,
+                                GL_STATIC_DRAW));
+    CHECK_GL_ERROR(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0));
+    CHECK_GL_ERROR(glEnableVertexAttribArray(1));
+
+    // Setup element array buffer.
+    CHECK_GL_ERROR(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_buffer_objects[kFloorVao][kIndexBuffer]));
+    CHECK_GL_ERROR(glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                                sizeof(uint32_t) * floor_faces.size() * 3,
+                                &floor_faces[0], GL_STATIC_DRAW));
+
+
+
 
 	// Setup vertex shader.
 	GLuint vertex_shader_id = 0;
@@ -331,12 +372,17 @@ int main(int argc, char* argv[])
 	glCompileShader(floor_fragment_shader_id);
 	CHECK_GL_SHADER_ERROR(floor_fragment_shader_id);
 
+
+
+
 	// FIXME: Setup another program for the floor, and get its locations.
 	// Note: you can reuse the vertex and geometry shader objects
 	GLuint floor_program_id = 0;
 	GLint floor_projection_matrix_location = 0;
 	GLint floor_view_matrix_location = 0;
 	GLint floor_light_position_location = 0;
+
+
 
 	glm::vec4 light_position = glm::vec4(10.0f, 10.0f, 10.0f, 1.0f);
 	float aspect = 0.0f;
@@ -414,4 +460,21 @@ int main(int argc, char* argv[])
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
+}
+
+void generate_floor(std::vector<glm::vec4> &vertices, std::vector<glm::vec4> &normals, std::vector<glm::uvec3> &faces) {
+    int idx = vertices.size();
+
+    vertices.push_back(glm::vec4(100,  -1, 100,  1));
+    vertices.push_back(glm::vec4(100,  -1, -100, 1));
+    vertices.push_back(glm::vec4(-100, -1, -100, 1));
+    vertices.push_back(glm::vec4(-100, -1, 100,  1));
+
+    normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+    normals.push_back(glm::vec4(0.0f, 1.0f, 0.0f, 0.0f));
+
+    faces.push_back(glm::uvec3(idx, idx + 1, idx + 2));
+    faces.push_back(glm::uvec3(idx, idx + 2, idx + 3));
 }

@@ -112,6 +112,7 @@ Camera g_camera;
 bool g_ctrl_pressed;
 bool g_shift_pressed;
 bool g_alt_pressed;
+bool fps = false;
 
 void
 KeyCallback(GLFWwindow* window,
@@ -125,23 +126,30 @@ KeyCallback(GLFWwindow* window,
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GL_TRUE);
     } else if (key == GLFW_KEY_W && action != GLFW_RELEASE) {
-        g_camera.zoom(1);
+        if(fps) g_camera.pan(glm::vec3(0, 0, 1));
+		else g_camera.zoom(-1);
     } else if (key == GLFW_KEY_S && action != GLFW_RELEASE) {
-        g_camera.zoom(-1);
+		if(fps) g_camera.pan(glm::vec3(0, 0, -1));
+		else g_camera.zoom(1);
     } else if (key == GLFW_KEY_A && action != GLFW_RELEASE) {
-        g_camera.roll(-1);
+        if(fps) g_camera.pan(glm::vec3(-1, 0, 0));
+		else g_camera.strave(glm::vec3(-1, 0, 0));
     } else if (key == GLFW_KEY_D && action != GLFW_RELEASE) {
-        g_camera.roll(1);
+		if(fps) g_camera.pan(glm::vec3(1, 0, 0));
+		else g_camera.strave(glm::vec3(1, 0, 0));
     } else if (key == GLFW_KEY_LEFT && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec2(-1, 0));
+        g_camera.roll(-1);
     } else if (key == GLFW_KEY_RIGHT && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec2(1, 0));
+		g_camera.roll(1);
     } else if (key == GLFW_KEY_DOWN && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec2(0, -1));
+		if(fps) g_camera.pan(glm::vec3(0, -1, 0));
+		else g_camera.strave(glm::vec3(0, -1, 0));
     } else if (key == GLFW_KEY_UP && action != GLFW_RELEASE) {
-        g_camera.translate(glm::vec2(0, 1));
+		if(fps) g_camera.pan(glm::vec3(0, 1, 0));
+		else g_camera.strave(glm::vec3(0, 1, 0));
     } else if (key == GLFW_KEY_C && action != GLFW_RELEASE) {
-        // FIXME: FPS mode on/off
+		fps  = !fps;
+		std::cout << "FPS: " << fps << std::endl;
     }
     if (!g_menger)
         return ; // 0-4 only available in Menger mode.
@@ -190,7 +198,7 @@ MousePosCallback(GLFWwindow* window, double mouse_x, double mouse_y)
         } else if (g_current_button == GLFW_MOUSE_BUTTON_RIGHT || (g_current_button == GLFW_MOUSE_BUTTON_LEFT && (g_alt_pressed || g_shift_pressed))) {
             g_camera.zoom(10.0f * deltaMouse.y / window_height);
         } else if (g_current_button == GLFW_MOUSE_BUTTON_MIDDLE || (g_current_button == GLFW_MOUSE_BUTTON_LEFT && g_ctrl_pressed)) {
-            g_camera.translate(25.0f*glm::vec2(-deltaMouse.x / window_width, deltaMouse.y / window_height));
+            g_camera.pan(25.0f*glm::vec3(-deltaMouse.x / window_width, deltaMouse.y / window_height, 0));
         }
     }
 
@@ -409,10 +417,10 @@ int main(int argc, char* argv[])
 
 
 	// Code for initializing the floor GLSL program
-	GLuint floor_program_id = 1;
-	GLint floor_projection_matrix_location = 1;
-	GLint floor_view_matrix_location = 1;
-	GLint floor_light_position_location = 1;
+	GLuint floor_program_id = 0;
+	GLint floor_projection_matrix_location = 0;
+	GLint floor_view_matrix_location = 0;
+	GLint floor_light_position_location = 0;
 
     CHECK_GL_ERROR(floor_program_id = glCreateProgram());
     CHECK_GL_ERROR(glAttachShader(floor_program_id, vertex_shader_id));

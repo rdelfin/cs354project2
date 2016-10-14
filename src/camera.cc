@@ -43,8 +43,23 @@ void Camera::roll(float dir) {
 }
 
 
-void Camera::translate(glm::vec2 dir) {
-    translateMat  = glm::translate((dir.x*right_ + dir.y*up_)*pan_speed) * translateMat;
+void Camera::strave(glm::vec3 dir) {
+    centerTranslateMat  = glm::translate((dir.x*right_ + dir.y*up_ + dir.z*look_)*pan_speed) * centerTranslateMat;
+}
+
+void Camera::pan(glm::vec3 dir) {
+    centerTranslateMat  = glm::translate((dir.x*right_ + dir.y*up_ + dir.z*look_)*pan_speed) * centerTranslateMat;
+    eyeTranslateMat  = glm::translate((dir.x*right_ + dir.y*up_ + dir.z*look_)*pan_speed) * eyeTranslateMat;
+}
+
+
+void Camera::yPan(glm::vec3 dir) {
+    centerTranslateMat  = glm::translate(glm::vec3(dir.x, dir.y, dir.z)*pan_speed) * centerTranslateMat;
+    eyeTranslateMat  = glm::translate(glm::vec3(dir.x, dir.y, dir.z)*pan_speed) * eyeTranslateMat;
+}
+
+void Camera::yStrave(glm::vec3 dir) {
+    centerTranslateMat  = glm::translate(glm::vec3(dir.x, dir.y, dir.z)*pan_speed) * centerTranslateMat;
 }
 
 void Camera::zoom(float dir) {
@@ -54,8 +69,8 @@ void Camera::zoom(float dir) {
 
 glm::mat4 Camera::get_view_matrix() const
 {
-    glm::vec3 newEye(translateMat * rotateMat * glm::vec4(eye_, 1));
-    glm::vec3 newCenter(translateMat * rotateMat * glm::vec4(center_, 1));
+    glm::vec3 newEye(eyeTranslateMat * rotateMat * glm::vec4(eye_, 1));
+    glm::vec3 newCenter(centerTranslateMat * rotateMat * glm::vec4(center_, 1));
 
     glm::vec3 Z = glm::normalize(newEye - newCenter);
     glm::vec3 X = glm::cross(up_, Z);
@@ -71,3 +86,4 @@ glm::mat4 Camera::get_view_matrix() const
 
     return eyeMat;
 }
+

@@ -463,7 +463,7 @@ int main(int argc, char* argv[])
 }
 
 void generate_floor(std::vector<glm::vec4> &vertices, std::vector<glm::vec4> &normals, std::vector<glm::uvec3> &faces) {
-    int idx = vertices.size();
+    unsigned long idx = vertices.size();
 
     vertices.push_back(glm::vec4(100,  -1, 100,  1));
     vertices.push_back(glm::vec4(100,  -1, -100, 1));
